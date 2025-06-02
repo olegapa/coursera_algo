@@ -28,7 +28,7 @@ func GetParentIdx(i int) int {
 }
 
 func (queue PriorityQueue) isLess(idx1, idx2 int) bool {
-	if queue[idx1].executionTime == queue[idx2].executionTime{
+	if queue[idx1].executionTime == queue[idx2].executionTime {
 		return queue[idx1].idx < queue[idx2].idx
 	}
 	return queue[idx1].executionTime < queue[idx2].executionTime
@@ -83,7 +83,7 @@ func ProcessJobs(numJobs, numThreads int, jobs []int) []Thread {
 		if i >= numJobs {
 			return result
 		}
-		queue = append(queue, Thread{i, jobs[i]})
+		queue.insert(Thread{i, jobs[i]})
 		result = append(result, Thread{i, 0})
 	}
 

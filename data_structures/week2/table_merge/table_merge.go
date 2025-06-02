@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-// Disjoint Set Union (Union-Find) with path compression and union by rank
 type DSU struct {
 	parent []int
 	rank   []int
