@@ -32,7 +32,7 @@ func ReadInput() ([]int, []int) {
 
 	splStr := strings.Split(strings.TrimSpace(str), " ")
 
-	for i := range n {
+	for i := 0; i < n; i++ {
 		seq1[i], err = strconv.Atoi(splStr[i])
 		if err != nil {
 			os.Exit(1)
@@ -60,7 +60,7 @@ func ReadInput() ([]int, []int) {
 
 	splStr = strings.Split(strings.TrimSpace(str), " ")
 
-	for i := range m {
+	for i := 0; i < m; i++ {
 		seq2[i], err = strconv.Atoi(splStr[i])
 		if err != nil {
 			os.Exit(1)
@@ -82,7 +82,7 @@ func getMin(num ...int) (int, int) {
 
 func fillDistanceMatrix(s1, s2 []int) [][]int {
 	matrix := make([][]int, len(s1)+1)
-	for i := range len(s1) + 1 {
+	for i := 0; i < len(s1)+1; i++ {
 		matrix[i] = make([]int, len(s2)+1)
 	}
 

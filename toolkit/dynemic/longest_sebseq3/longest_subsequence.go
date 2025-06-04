@@ -32,7 +32,7 @@ func ReadInput() ([]int, []int, []int) {
 
 	splStr := strings.Split(strings.TrimSpace(str), " ")
 
-	for i := range n {
+	for i := 0; i < n; i++ {
 		seq1[i], err = strconv.Atoi(splStr[i])
 		if err != nil {
 			os.Exit(1)
@@ -60,7 +60,7 @@ func ReadInput() ([]int, []int, []int) {
 
 	splStr = strings.Split(strings.TrimSpace(str), " ")
 
-	for i := range m {
+	for i := 0; i < m; i++ {
 		seq2[i], err = strconv.Atoi(splStr[i])
 		if err != nil {
 			os.Exit(1)
@@ -88,7 +88,7 @@ func ReadInput() ([]int, []int, []int) {
 
 	splStr = strings.Split(strings.TrimSpace(str), " ")
 
-	for i := range p {
+	for i := 0; i < p; i++ {
 		seq3[i], err = strconv.Atoi(splStr[i])
 		if err != nil {
 			os.Exit(1)
@@ -109,34 +109,28 @@ func getMin(num ...int) (int, int) {
 }
 
 func fillEdges(matrix [][][]int, xlen, ylen, zlen int, s1, s2, s3 []int) {
-	for i := range xlen {
+	for i := 0; i < xlen; i++ {
 		matrix[i][0][0] = i
 	}
-
-	for i := range zlen {
+	for i := 0; i < zlen; i++ {
 		matrix[0][i][0] = i
 	}
-
-	for i := range ylen {
+	for i := 0; i < ylen; i++ {
 		matrix[0][0][i] = i
 	}
-
 	for i := 1; i < zlen; i++ {
 		for j := 1; j < ylen; j++ {
 			matrix[0][i][j], _ = getMin(matrix[0][i-1][j]+1, matrix[0][i][j-1]+1)
 		}
 	}
-
 	for i := 1; i < xlen; i++ {
 		for j := 1; j < ylen; j++ {
 			matrix[i][0][j], _ = getMin(matrix[i-1][0][j]+1, matrix[i][0][j-1]+1)
 		}
 	}
-
 	for i := 1; i < xlen; i++ {
 		for j := 1; j < zlen; j++ {
 			matrix[i][j][0], _ = getMin(matrix[i-1][j][0]+1, matrix[i][j-1][0]+1)
-
 		}
 	}
 }
@@ -144,9 +138,9 @@ func fillEdges(matrix [][][]int, xlen, ylen, zlen int, s1, s2, s3 []int) {
 func fillDistanceMatrix(s1, s2, s3 []int) ([][][]int, int, int, int) {
 	xlen, ylen, zlen := len(s1)+1, len(s3)+1, len(s2)+1
 	matrix := make([][][]int, xlen)
-	for i := range xlen {
+	for i := 0; i < xlen; i++ {
 		matrix[i] = make([][]int, zlen)
-		for j := range zlen {
+		for j := 0; j < zlen; j++ {
 			matrix[i][j] = make([]int, ylen)
 		}
 	}
