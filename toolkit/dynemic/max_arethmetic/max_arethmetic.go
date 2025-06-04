@@ -52,8 +52,8 @@ func updateMatrixes(lIdx, rIdx int, nums []int, ops []operation, mins, maxs [][]
 	minimum := 9999999
 	for i := 0; lIdx+i < rIdx; i++ {
 		op := ops[lIdx+i]
-		fmt.Printf("max through %d %d %d %d %d\nwhere lIdx = %d, rIdx = %d, i = %d\n", maximum, op.Apply(maxs[lIdx][i], maxs[rIdx-i][rIdx]), op.Apply(mins[lIdx][i], maxs[rIdx-i][rIdx]), op.Apply(maxs[lIdx][i], mins[rIdx-i][rIdx]), op.Apply(mins[lIdx][i], mins[rIdx-i][rIdx]), lIdx, rIdx, i)
-		fmt.Println(string(op))
+		// fmt.Printf("max through %d %d %d %d %d\nwhere lIdx = %d, rIdx = %d, i = %d\n", maximum, op.Apply(maxs[lIdx][i], maxs[rIdx-i][rIdx]), op.Apply(mins[lIdx][i], maxs[rIdx-i][rIdx]), op.Apply(maxs[lIdx][i], mins[rIdx-i][rIdx]), op.Apply(mins[lIdx][i], mins[rIdx-i][rIdx]), lIdx, rIdx, i)
+		// fmt.Println(string(op))
 		maximum = max(maximum, op.Apply(maxs[lIdx][lIdx+i], maxs[lIdx+i+1][rIdx]), op.Apply(mins[lIdx][lIdx+i], maxs[lIdx+i+1][rIdx]), op.Apply(maxs[lIdx][lIdx+i], mins[lIdx+i+1][rIdx]), op.Apply(mins[lIdx][lIdx+i], mins[lIdx+i+1][rIdx]))
 		minimum = min(minimum, op.Apply(maxs[lIdx][lIdx+i], maxs[lIdx+i+1][rIdx]), op.Apply(mins[lIdx][lIdx+i], maxs[lIdx+i+1][rIdx]), op.Apply(maxs[lIdx][lIdx+i], mins[lIdx+i+1][rIdx]), op.Apply(mins[lIdx][lIdx+i], mins[lIdx+i+1][rIdx]))
 	}
@@ -76,12 +76,12 @@ func GetMaxValue(str string) int {
 			updateMatrixes(j, i+j, nums, ops, mins, maxs)
 		}
 	}
-	for i := range maxs {
-		fmt.Println(maxs[i])
-	}
-	for i := range maxs {
-		fmt.Println(mins[i])
-	}
+	// for i := range maxs {
+	// 	fmt.Println(maxs[i])
+	// }
+	// for i := range maxs {
+	// 	fmt.Println(mins[i])
+	// }
 	return maxs[0][len(nums)-1]
 }
 
