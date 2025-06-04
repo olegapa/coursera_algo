@@ -3,71 +3,132 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 	"strconv"
 	"strings"
 )
 
-type SegmentTree struct {
-	n    int
-	tree []int
-	lazy []int
-	set  []bool
+type Node struct {
+	key, prior  int
+	left, right *Node
+	sum         int64
 }
 
-func NewSegmentTree(size int) *SegmentTree {
-	n := 1
-	for n < size {
-		n <<= 1
+func update(n *Node) {
+	if n == nil {
+		return
 	}
-	return &SegmentTree{
-		n:    n,
-		tree: make([]int, 2*n),
-		lazy: make([]int, 2*n),
-		set:  make([]bool, 2*n),
+	n.sum = int64(n.key)
+	if n.left != nil {
+		n.sum += n.left.sum
+	}
+	if n.right != nil {
+		n.sum += n.right.sum
 	}
 }
 
-func (st *SegmentTree) push(v, l, r int) {
-	if st.set[v] {
-		st.tree[v] = (r - l) * st.lazy[v]
-		if v < st.n {
-			st.lazy[2*v] = st.lazy[v]
-			st.lazy[2*v+1] = st.lazy[v]
-			st.set[2*v] = true
-			st.set[2*v+1] = true
+func split(n *Node, key int) (*Node, *Node) {
+	if n == nil {
+		return nil, nil
+	}
+	if key < n.key {
+		l, r := split(n.left, key)
+		n.left = r
+		update(n)
+		return l, n
+	} else {
+		l, r := split(n.right, key)
+		n.right = l
+		update(n)
+		return n, r
+	}
+}
+
+func merge(l, r *Node) *Node {
+	if l == nil || r == nil {
+		if l != nil {
+			return l
 		}
-		st.set[v] = false
+		return r
+	}
+	if l.prior > r.prior {
+		l.right = merge(l.right, r)
+		update(l)
+		return l
+	} else {
+		r.left = merge(l, r.left)
+		update(r)
+		return r
 	}
 }
 
-func (st *SegmentTree) rangeSet(v, l, r, ql, qr, value int) {
-	st.push(v, l, r)
-	if ql >= r || qr <= l {
-		return
+func insert(n *Node, key int) *Node {
+	if exists(n, key) {
+		return n
 	}
-	if ql <= l && r <= qr {
-		st.lazy[v] = value
-		st.set[v] = true
-		st.push(v, l, r)
-		return
-	}
-	m := (l + r) / 2
-	st.rangeSet(2*v, l, m, ql, qr, value)
-	st.rangeSet(2*v+1, m, r, ql, qr, value)
-	st.tree[v] = st.tree[2*v] + st.tree[2*v+1]
+	node := &Node{key: key, prior: rand.Int(), sum: int64(key)}
+	return insertNode(n, node)
 }
 
-func (st *SegmentTree) rangeSum(v, l, r, ql, qr int) int {
-	st.push(v, l, r)
-	if ql >= r || qr <= l {
-		return 0
+func insertNode(n, node *Node) *Node {
+	if n == nil {
+		return node
 	}
-	if ql <= l && r <= qr {
-		return st.tree[v]
+	if node.prior > n.prior {
+		node.left, node.right = split(n, node.key)
+		update(node)
+		return node
 	}
-	m := (l + r) / 2
-	return st.rangeSum(2*v, l, m, ql, qr) + st.rangeSum(2*v+1, m, r, ql, qr)
+	if node.key < n.key {
+		n.left = insertNode(n.left, node)
+	} else {
+		n.right = insertNode(n.right, node)
+	}
+	update(n)
+	return n
+}
+
+func erase(n *Node, key int) *Node {
+	if n == nil {
+		return nil
+	}
+	if n.key == key {
+		return merge(n.left, n.right)
+	}
+	if key < n.key {
+		n.left = erase(n.left, key)
+	} else {
+		n.right = erase(n.right, key)
+	}
+	update(n)
+	return n
+}
+
+func exists(n *Node, key int) bool {
+	for n != nil {
+		if n.key == key {
+			return true
+		}
+		if key < n.key {
+			n = n.left
+		} else {
+			n = n.right
+		}
+	}
+	return false
+}
+
+func rangeSum(n *Node, l, r int) int64 {
+	var t1, t2, t3 *Node
+	t1, t2 = split(n, l-1)
+	t2, t3 = split(t2, r)
+	var res int64
+	if t2 != nil {
+		res = t2.sum
+	}
+	n = merge(t1, merge(t2, t3))
+	return res
 }
 
 func main() {
@@ -75,23 +136,48 @@ func main() {
 	writer := bufio.NewWriter(os.Stdout)
 	defer writer.Flush()
 
-	var n, m int
-	fmt.Fscanln(reader, &n, &m)
-	st := NewSegmentTree(n)
+	var root *Node
+	var last_sum int64 = 0
 
-	for i := 0; i < m; i++ {
+	var n int
+	fmt.Fscanln(reader, &n)
+	for i := 0; i < n; i++ {
 		line, _ := reader.ReadString('\n')
+		line = strings.TrimSpace(line)
+		if line == "" {
+			i--
+			continue
+		}
 		tokens := strings.Fields(line)
-		if tokens[0] == "set" {
+		switch tokens[0] {
+		case "+":
+			x, _ := strconv.Atoi(tokens[1])
+			x = int((int64(x) + last_sum) % 1000000001)
+			root = insert(root, x)
+		case "-":
+			x, _ := strconv.Atoi(tokens[1])
+			x = int((int64(x) + last_sum) % 1000000001)
+			root = erase(root, x)
+		case "?":
+			x, _ := strconv.Atoi(tokens[1])
+			x = int((int64(x) + last_sum) % 1000000001)
+			if exists(root, x) {
+				fmt.Fprintln(writer, "Found")
+			} else {
+				fmt.Fprintln(writer, "Not found")
+			}
+		case "s":
 			l, _ := strconv.Atoi(tokens[1])
 			r, _ := strconv.Atoi(tokens[2])
-			val, _ := strconv.Atoi(tokens[3])
-			st.rangeSet(1, 0, st.n, l, r, val)
-		} else if tokens[0] == "sum" {
-			l, _ := strconv.Atoi(tokens[1])
-			r, _ := strconv.Atoi(tokens[2])
-			res := st.rangeSum(1, 0, st.n, l, r)
-			fmt.Fprintln(writer, res)
+			l = int((int64(l) + last_sum) % 1000000001)
+			r = int((int64(r) + last_sum) % 1000000001)
+			if l > r {
+				last_sum = 0
+				fmt.Fprintln(writer, 0)
+			} else {
+				last_sum = rangeSum(root, l, r)
+				fmt.Fprintln(writer, last_sum)
+			}
 		}
 	}
 }
