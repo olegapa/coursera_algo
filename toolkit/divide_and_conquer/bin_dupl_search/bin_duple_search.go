@@ -82,7 +82,7 @@ func binSearch(searchSlice []int, numbers []int, indexies []int, res []int, offs
 
 	leftEdge, rightEdge := findEdges(searchSlice, mid)
 
-	fmt.Printf("search slice = %v, indexes = %v, mid = %d. left_idx = %d, right_idx = %d\n", searchSlice, indexies, mid, leftEdge, rightEdge)
+	// fmt.Printf("search slice = %v, indexes = %v, mid = %d. left_idx = %d, right_idx = %d\n", searchSlice, indexies, mid, leftEdge, rightEdge)
 	for _, idx := range indexies {
 		// fmt.Printf("%d %d\n", mid, idx)
 		if searchSlice[mid] == numbers[idx] {

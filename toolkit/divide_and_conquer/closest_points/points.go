@@ -191,31 +191,31 @@ func CalculateMinDistance(n int, points []Point) float64 {
 		return points[0].Distance(points[1])
 	}
 
-	d1 := CalculateMinDistance(n/2, points[:n/2])
-	d2 := CalculateMinDistance(n-n/2, points[n/2:])
+	mid := n / 2
+	d1 := CalculateMinDistance(mid, points[:mid])
+	d2 := CalculateMinDistance(n-mid, points[mid:])
 
 	d := getMinDist(d1, d2)
-	// fmt.Printf("d = %f\n", d)
 
-	dRange := filterPoints(points, d, 1-n/2)
+	midX := points[mid].x
+	dRange := filterPoints(points, d, midX)
 	if len(dRange) < 2 {
 		return d
 	}
 
 	QuickSort(dRange, func(p1, p2 Point) bool {
-		return p1.y <= p2.y
+		return p1.y < p2.y
 	})
 
-	dCross := dRange[0].Distance(dRange[1])
-	for i, v := range dRange {
-		for j := i + 1; j <= i+7 && j < len(dRange); j++ {
-			distance := v.Distance(dRange[j])
-			if dCross > distance {
+	dCross := d
+	for i := 0; i < len(dRange); i++ {
+		for j := i + 1; j < len(dRange) && float64(dRange[j].y-dRange[i].y) < d; j++ {
+			distance := dRange[i].Distance(dRange[j])
+			if dCross < 0 || distance < dCross {
 				dCross = distance
 			}
 		}
 	}
-	// fmt.Printf("dCross = %f\n", dCross)
 
 	return getMinDist(d, dCross)
 

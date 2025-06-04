@@ -115,10 +115,10 @@ func sortSlice(numbers []int) {
 }
 
 func findResultPosition(value, idx int, numbers []int, isLeft bool) int {
-	fmt.Printf("Find pos for %d from idx = %d, in %v . isLeft %v\n", value, idx, numbers, isLeft)
+	// fmt.Printf("Find pos for %d from idx = %d, in %v . isLeft %v\n", value, idx, numbers, isLeft)
 
 	if idx > len(numbers)-1 {
-		fmt.Println(len(numbers) - 1)
+		// fmt.Println(len(numbers) - 1)
 		return len(numbers) - 1
 	}
 
@@ -144,10 +144,10 @@ func findResultPosition(value, idx int, numbers []int, isLeft bool) int {
 	} else {
 		if idx < 0 {
 			if value <= numbers[0] {
-				fmt.Println(-1)
+				// fmt.Println(-1)
 				return -1
 			}
-			fmt.Println(0)
+			// fmt.Println(0)
 			return 0
 		}
 		v := numbers[idx]
@@ -169,7 +169,7 @@ func findResultPosition(value, idx int, numbers []int, isLeft bool) int {
 			idx--
 		}
 	}
-	fmt.Println(idx)
+	// fmt.Println(idx)
 	return idx
 }
 
@@ -190,10 +190,10 @@ func binSearch(v int, numbers []int, isLeft bool) int {
 }
 
 func CalculateEanings(left []int, right []int, points []int) []int {
-	fmt.Printf("Input arrays \n%v,\n %v\n", left, right)
+	// fmt.Printf("Input arrays \n%v,\n %v\n", left, right)
 	sortSlice(left)
 	sortSlice(right)
-	fmt.Printf("Sorted arrays \n%v,\n %v\n", left, right)
+	// fmt.Printf("Sorted arrays \n%v,\n %v\n", left, right)
 
 	res := make([]int, len(points))
 	for i, v := range points {
@@ -207,6 +207,6 @@ func main() {
 	_, _, left, right, points := ReadInput()
 
 	coord := CalculateEanings(left, right, points)
-	fmt.Println(len(coord))
+	// fmt.Println(len(coord))
 	fmt.Println(strings.Trim(fmt.Sprint(coord), "[]"))
 }

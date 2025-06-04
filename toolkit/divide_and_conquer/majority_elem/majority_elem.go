@@ -89,5 +89,10 @@ func getMajority(numbers []int, n int) (bool, int, int) {
 func main() {
 	n, numbers := ReadInput()
 
+	if IsMajority(numbers, n) {
+		fmt.Println("1")
+	} else {
+		fmt.Println("0")
+	}
 	fmt.Println(IsMajority(numbers, n))
 }
