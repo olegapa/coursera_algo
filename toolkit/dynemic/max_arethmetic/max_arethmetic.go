@@ -85,6 +85,26 @@ func GetMaxValue(str string) int {
 	return maxs[0][len(nums)-1]
 }
 
+func min(nums ...int) int {
+	m := nums[0]
+	for i := 1; i < len(nums); i++ {
+		if nums[i] < m {
+			m = nums[i]
+		}
+	}
+	return m
+}
+
+func max(nums ...int) int {
+	m := nums[0]
+	for i := 1; i < len(nums); i++ {
+		if nums[i] > m {
+			m = nums[i]
+		}
+	}
+	return m
+}
+
 func main() {
 	str := ReadInput()
 	if len(str)%2 == 0 {

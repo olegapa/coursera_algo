@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -71,23 +70,9 @@ func QuickSort(numbers []int, isLarger func(i, j int) bool) {
 
 func FindMaxSalary(numbers []int, sortF func([]int, func(int, int) bool)) string {
 	sortF(numbers, func(i, j int) bool {
-		// fmt.Printf("Comparing %d and %d\n", i, j)
-		var offsetI, offsetJ int
-		for n := 3; n >= 0; n-- {
-			p := int(math.Pow(10, float64(n)))
-			if i/p > 0 {
-				offsetI = p * 10
-				break
-			}
-		}
-		for n := 3; n >= 0; n-- {
-			p := int(math.Pow(10, float64(n)))
-			if j/p > 0 {
-				offsetJ = p * 10
-				break
-			}
-		}
-		return i*offsetJ+j >= j*offsetI+i
+		si := strconv.Itoa(i)
+		sj := strconv.Itoa(j)
+		return si+sj >= sj+si
 	})
 	// fmt.Println(numbers)
 	var res string

@@ -32,7 +32,7 @@ func ReadInput() ([]int, int) {
 
 	splStr := strings.Split(strings.TrimSpace(str), " ")
 
-	for i := range n {
+	for i := 0; i < n; i++ {
 		seq1[i], err = strconv.Atoi(splStr[i])
 		if err != nil {
 			os.Exit(1)

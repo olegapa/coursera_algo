@@ -35,7 +35,7 @@ func ReadInput() (int, int, []int) {
 	spltdStr = strings.Split(strings.TrimSpace(str), " ")
 	bars := make([]int, n)
 
-	for i := range n {
+	for i := 0; i < n; i++ {
 		bars[i], err = strconv.Atoi(spltdStr[i])
 		if err != nil {
 			os.Exit(-1)
@@ -46,7 +46,7 @@ func ReadInput() (int, int, []int) {
 
 func createTable(w, n int, bars []int) [][]int {
 	table := make([][]int, n+1)
-	for i := range n + 1 {
+	for i := 0; i < n+1; i++ {
 		table[i] = make([]int, w+1)
 	}
 
@@ -57,11 +57,18 @@ func createTable(w, n int, bars []int) [][]int {
 			} else {
 				table[i][j] = table[i-1][j]
 			}
-
 		}
 	}
 
 	return table
+}
+
+// Добавить функцию max для совместимости со старыми версиями Go
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
 
 func FindMaxGoldAmount(w, n int, bars []int) int {

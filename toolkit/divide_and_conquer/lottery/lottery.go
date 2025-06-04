@@ -40,7 +40,7 @@ func ReadInput() (int, int, []int, []int, []int) {
 
 	lines_left := make([]int, n)
 	lines_right := make([]int, n)
-	for i := range n {
+	for i := 0; i < n; i++ {
 		str, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Printf("Wrong input for %d line\n", i)
@@ -68,7 +68,7 @@ func ReadInput() (int, int, []int, []int, []int) {
 
 	splitedInput = strings.Split(strings.TrimSpace(str), " ")
 
-	for i := range m {
+	for i := 0; i < m; i++ {
 		points[i], err = strconv.Atoi(splitedInput[i])
 		if err != nil {
 			fmt.Printf("Wrong point input idx = %d", i)

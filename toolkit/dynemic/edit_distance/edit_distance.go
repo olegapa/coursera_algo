@@ -32,7 +32,7 @@ func getMin(num ...int) int {
 
 func fillDistanceMatrix(s1, s2 string) [][]int {
 	matrix := make([][]int, len(s1)+1)
-	for i := range len(s1) + 1 {
+	for i := 0; i < len(s1)+1; i++ {
 		matrix[i] = make([]int, len(s2)+1)
 	}
 
