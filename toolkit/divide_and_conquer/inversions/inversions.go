@@ -45,41 +45,46 @@ func ReadInput() (int, []int) {
 	return n, numbers
 }
 
-func FindInversions(numbers []int) int {
-	if len(numbers) <= 1 {
+func mergeSortAndCount(arr, temp []int, left, right int) int {
+	if right-left <= 1 {
 		return 0
 	}
-	mid, inv := len(numbers)/2, 0
-	inv += FindInversions(numbers[:mid])
-	inv += FindInversions(numbers[mid:])
-	tempSlice := make([]int, len(numbers))
-	copy(tempSlice, numbers)
-	// fmt.Printf("Input slice: %v, inv = %d\n", numbers, inv)
-	for k, i, j := 0, 0, mid; k < len(numbers); k++ {
-		if i == mid {
-			for j < len(numbers) {
-				numbers[k] = tempSlice[j]
-				j++
-			}
-			break
-		} else if j == len(numbers) {
-			for i < mid {
-				numbers[k] = tempSlice[i]
-				i++
-			}
-			break
-		} else if tempSlice[i] <= tempSlice[j] {
-			numbers[k] = tempSlice[i]
+	mid := (left + right) / 2
+	inv := mergeSortAndCount(arr, temp, left, mid)
+	inv += mergeSortAndCount(arr, temp, mid, right)
+
+	i, j, k := left, mid, left
+	for i < mid && j < right {
+		if arr[i] <= arr[j] {
+			temp[k] = arr[i]
 			i++
 		} else {
-			numbers[k] = tempSlice[j]
-			j++
+			temp[k] = arr[j]
 			inv += mid - i
+			j++
 		}
+		k++
 	}
-	// fmt.Printf("Res slice: %v, inv = %d\n", numbers, inv)
-
+	for i < mid {
+		temp[k] = arr[i]
+		i++
+		k++
+	}
+	for j < right {
+		temp[k] = arr[j]
+		j++
+		k++
+	}
+	for l := left; l < right; l++ {
+		arr[l] = temp[l]
+	}
 	return inv
+}
+
+func FindInversions(numbers []int) int {
+	n := len(numbers)
+	temp := make([]int, n)
+	return mergeSortAndCount(numbers, temp, 0, n)
 }
 
 func main() {

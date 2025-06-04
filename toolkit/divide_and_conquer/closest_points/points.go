@@ -184,41 +184,68 @@ func getMinDist(d1, d2 float64) float64 {
 }
 
 func CalculateMinDistance(n int, points []Point) float64 {
-	if n == 1 {
+	if n < 2 {
 		return -1
 	}
-	if n == 2 {
-		return points[0].Distance(points[1])
-	}
+	pointsX := make([]Point, n)
+	pointsY := make([]Point, n)
+	copy(pointsX, points)
+	copy(pointsY, points)
+	QuickSort(pointsX, func(p1, p2 Point) bool { return p1.x < p2.x })
+	QuickSort(pointsY, func(p1, p2 Point) bool { return p1.y < p2.y })
+	return closestUtil(pointsX, pointsY)
+}
 
-	mid := n / 2
-	d1 := CalculateMinDistance(mid, points[:mid])
-	d2 := CalculateMinDistance(n-mid, points[mid:])
-
-	d := getMinDist(d1, d2)
-
-	midX := points[mid].x
-	dRange := filterPoints(points, d, midX)
-	if len(dRange) < 2 {
-		return d
-	}
-
-	QuickSort(dRange, func(p1, p2 Point) bool {
-		return p1.y < p2.y
-	})
-
-	dCross := d
-	for i := 0; i < len(dRange); i++ {
-		for j := i + 1; j < len(dRange) && float64(dRange[j].y-dRange[i].y) < d; j++ {
-			distance := dRange[i].Distance(dRange[j])
-			if dCross < 0 || distance < dCross {
-				dCross = distance
+func closestUtil(pointsX, pointsY []Point) float64 {
+	n := len(pointsX)
+	if n <= 3 {
+		minDist := -1.0
+		for i := 0; i < n; i++ {
+			for j := i + 1; j < n; j++ {
+				d := pointsX[i].Distance(pointsX[j])
+				if minDist < 0 || d < minDist {
+					minDist = d
+				}
 			}
+		}
+		return minDist
+	}
+	mid := n / 2
+	midX := pointsX[mid].x
+
+	leftX := pointsX[:mid]
+	rightX := pointsX[mid:]
+
+	leftY := make([]Point, 0, mid)
+	rightY := make([]Point, 0, n-mid)
+	for _, p := range pointsY {
+		if p.x < midX || (p.x == midX && len(leftY) < len(leftX)) {
+			leftY = append(leftY, p)
+		} else {
+			rightY = append(rightY, p)
 		}
 	}
 
-	return getMinDist(d, dCross)
+	d1 := closestUtil(leftX, leftY)
+	d2 := closestUtil(rightX, rightY)
+	d := getMinDist(d1, d2)
 
+	strip := make([]Point, 0)
+	for _, p := range pointsY {
+		if math.Abs(float64(p.x-midX)) < d {
+			strip = append(strip, p)
+		}
+	}
+	minStrip := d
+	for i := 0; i < len(strip); i++ {
+		for j := i + 1; j < len(strip) && float64(strip[j].y-strip[i].y) < d; j++ {
+			dist := strip[i].Distance(strip[j])
+			if dist < minStrip {
+				minStrip = dist
+			}
+		}
+	}
+	return minStrip
 }
 
 func main() {

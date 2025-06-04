@@ -8,12 +8,10 @@ import (
 	"strings"
 )
 
-func ReadInput() (int, []int) {
-	reader := bufio.NewReader(os.Stdin)
+func ReadInput(reader *bufio.Reader) (int, []int) {
 	var n int
 
 	str, err := reader.ReadString('\n')
-
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -32,9 +30,7 @@ func ReadInput() (int, []int) {
 	}
 
 	numbers := make([]int, n)
-
 	splittedStr := strings.Split(strings.TrimSpace(str), " ")
-
 	for i := 0; i < n; i++ {
 		numbers[i], err = strconv.Atoi(splittedStr[i])
 		if err != nil {
@@ -87,7 +83,7 @@ func binSearch(searchSlice []int, numbers []int, indexies []int, res []int, offs
 		// fmt.Printf("%d %d\n", mid, idx)
 		if searchSlice[mid] == numbers[idx] {
 			res[idx] = leftEdge + offset
-		} else if len(searchSlice) == 1{
+		} else if len(searchSlice) == 1 {
 			res[idx] = -1
 		} else if numbers[idx] < searchSlice[mid] {
 			left_idx = append(left_idx, idx)
@@ -118,9 +114,8 @@ func binSearch(searchSlice []int, numbers []int, indexies []int, res []int, offs
 }
 
 func main() {
-	_, array := ReadInput()
-
-	_, numbers := ReadInput()
-
+	reader := bufio.NewReader(os.Stdin)
+	_, array := ReadInput(reader)
+	_, numbers := ReadInput(reader)
 	fmt.Println(strings.Trim(fmt.Sprint(PerformBinSearch(array, numbers)), "[]"))
 }

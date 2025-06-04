@@ -94,5 +94,5 @@ func main() {
 	} else {
 		fmt.Println("0")
 	}
-	fmt.Println(IsMajority(numbers, n))
+	// fmt.Println(IsMajority(numbers, n))
 }
